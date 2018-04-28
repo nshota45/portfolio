@@ -18,9 +18,13 @@ new Vue({
       }
 
       var self = this
-      fetch("http://localhost:9000/json").then(function(res) {
+      fetch("http://localhost:9000/json/" + sid).then(function(res) {
         return res.json()
       }).then(function(json) {
+        if(json.error != undefined) {
+          alert(json.error)
+          return
+        }
         self.list.push(
           {'sid': sid, 'originalValue': json.originalValue, 'changeValue': undefined}
         )
@@ -39,7 +43,14 @@ new Vue({
   },
   computed: {
     isConfirmButtonDisabled: function() {
-      if (this.list.length == 0) {
+      var isAllFromValid = true
+      this.list.forEach(function(e) {
+        if(e.originalValue == undefined || e.changeValue == undefined || e.changeValue == null || e.changeValue == '') {
+          isAllFromValid = false
+        }
+      })
+
+      if (this.list.length == 0 || !isAllFromValid) {
         return true
       } else {
         return false

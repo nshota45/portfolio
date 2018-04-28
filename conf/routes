@@ -5,7 +5,8 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-GET     /json                       controllers.HomeController.json
+POST    /update                     controllers.HomeController.updateValue
+GET     /json/:id                   controllers.HomeController.json(id: Long)
 
 GET     /login                           controllers.LoginController.login
 GET     /auth                            controllers.LoginController.auth

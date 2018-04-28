@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS user(
   email varchar(255) not null,
   primary key(id),
   unique key(email)
-) ENGINE=InnoDB charset=UTF8;
+) ENGINE=InnoDB default charset=UTF8;

@@ -4,6 +4,11 @@
 <span style="font-size:46px;font-weight:bold;color:white;">Nakano Shota's Portfolio</span>
 <span style="color:white">サーバサイドエンジニアです。</span><br>
 <div id="index">
+  @if(request.flash.get("infoMsg")) {
+    <div class="notification is-success">
+      @request.flash.get("infoMsg"))
+    </div>
+  }
   <small style="color:white">変更対象のIdを入力してください</small><br>
   <input type="number" class="input is-success" v-model="sid"><br>
   <button v-on:click="addId(sid)" class="button">button</button><br>
@@ -21,7 +26,7 @@
       <td>{{ l.sid }}</td>
       <td>{{ l.originalValue }}</td>
       <td>
-        <input type="number" class="input is-success">
+        <input type="number" class="input is-success" v-model="l.changeValue">
       </td>
       <td>
         <button class="button" aria-label="close" v-on:click="remove(l.sid)" style="color">削除</button>
@@ -40,13 +45,14 @@
         </header>
         <section class="modal-card-body">
           <div v-for="l in list" v-bind:key="l.sid">
-            <p>{{ l.sid }}</p>
+            <p>{{ l.sid }} {{ l.originalValue }} {{ l.changeValue }}</p>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <form action="/" method="get">
+          @helper.form(action = helper.CSRF(routes.HomeController.updateValue())) {
+            <input type="hidden" name="idValue" :value="list">
             <button class="button is-success">Save changes</button>
-          </form>
+          }
           <button class="button" v-on:click="hideModal">Cancel</button>
         </footer>
       </div>
