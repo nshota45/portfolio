@@ -9,7 +9,6 @@ import play.api.mvc._
 import services.LoginService
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 @Singleton
@@ -27,14 +26,16 @@ class LoginController @Inject()(
   }
 
   def auth = Action.async { implicit request: Request[AnyContent] =>
-    service.auth(request).map { user =>
-      val sessionId = generateSessionId
-      cache.set(sessionId, user, 3600.seconds)
-      Redirect("/").withSession("session_id" -> sessionId)
-    }.recoverWith {
-      case e:Exception =>
+    service.auth(request).map {
+      case Some(user) =>
+        val sessionId = generateSessionId
+        cache.set(sessionId, user, 1800.seconds)
+        Redirect("/admin").withSession("session_id" -> sessionId)
+      case None       => Redirect("/login").flashing("errMsg" -> "Not found user").withNewSession
+    }.recover {
+      case e: Exception =>
         Logger.error(e.getMessage, e)
-        Future(Redirect("/login").flashing("errMsg" -> e.getMessage).withNewSession)
+        Redirect("/login").flashing("errMsg" -> e.getMessage).withNewSession
     }
   }
 

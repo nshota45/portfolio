@@ -30,13 +30,13 @@ class LoginService @Inject()(
       s"&redirect_uri=${config.redirectUri}"
   }
 
-  override def auth(request: Request[AnyContent]): Future[User] = {
+  override def auth(request: Request[AnyContent]): Future[Option[User]] = {
     for {
       _     <- confirmState(request)
       code  <- getCode(request)
       token <- exchangeCodeForToken(code)
       email <- getEmail(token)
-      user  <- getUser(email)
+      user  <- dao.findUserByEmail(email)
     } yield user
   }
 
@@ -46,14 +46,14 @@ class LoginService @Inject()(
       paramState <- request.getQueryString("state")
       sessionState <- request.session.get("state")
     } yield paramState == sessionState) match {
-      case Some(bool) if bool => Future(Unit)
-      case None               => Future(throw new Exception("Invalid state."))
+      case Some(bool) if bool => Future.successful(Unit)
+      case _                  => Future(throw new Exception("Invalid state."))
     }
   }
 
   private def getCode(request: Request[AnyContent]): Future[String] = {
     request.getQueryString("code") match {
-      case Some(code) => Future(code)
+      case Some(code) => Future.successful(code)
       case None       => Future(throw new Exception("Not found code."))
     }
   }
@@ -83,13 +83,6 @@ class LoginService @Inject()(
       val claims = new String(Base64.decodeBase64(base64EncodedClaims))
       val json = Json.parse(claims)
       (json \ "email").as[String]
-    }
-  }
-
-  private def getUser(email: String): Future[User] = {
-    dao.findUserByEmail(email).map {
-      case Some(user) => user
-      case None       => throw new Exception("User not found.")
     }
   }
 }

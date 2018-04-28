@@ -12,7 +12,7 @@ class AdminController @Inject()(
     *
     * @return
     */
-  def admin = Action {
-    Ok
+  def home = Action {
+    Ok(views.html.admin.home())
   }
 }

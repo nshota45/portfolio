@@ -5,10 +5,16 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+GET     /json                       controllers.HomeController.json
 
 GET     /login                           controllers.LoginController.login
 GET     /auth                            controllers.LoginController.auth
 GET     /logout                          controllers.LoginController.logout
+
+
+
+
+GET     /admin                           controllers.AdminController.home
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

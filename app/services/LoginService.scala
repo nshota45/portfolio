@@ -7,5 +7,5 @@ import scala.concurrent.Future
 
 trait LoginService {
   def authorizationUrl: String
-  def auth(request: Request[AnyContent]): Future[User]
+  def auth(request: Request[AnyContent]): Future[Option[User]]
 }

@@ -1,5 +1,58 @@
-@()
+@()(implicit request: Request[AnyContent] )
 
 @main("Welcome to Play") {
-<h1 style="font-size:46px;font-weight:bold">Nakano Shota's Portfolio</h1>
+<span style="font-size:46px;font-weight:bold;color:white;">Nakano Shota's Portfolio</span>
+<span style="color:white">サーバサイドエンジニアです。</span><br>
+<div id="index">
+  <small style="color:white">変更対象のIdを入力してください</small><br>
+  <input type="number" class="input is-success" v-model="sid"><br>
+  <button v-on:click="addId(sid)" class="button">button</button><br>
+  <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>変更前</th>
+      <th>変更後</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="l in list" v-on:key="l.sid">
+      <td>{{ l.sid }}</td>
+      <td>{{ l.originalValue }}</td>
+      <td>
+        <input type="number" class="input is-success">
+      </td>
+      <td>
+        <button class="button" aria-label="close" v-on:click="remove(l.sid)" style="color">削除</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="button is-primary" v-on:click="showModal" :disabled="isConfirmButtonDisabled">確認</button>
+  <div class="modal" v-bind:class="{ 'is-active': isActive }">
+    <div class="modal-background">
+    </div>
+    <div class="modal-content">
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Modal title</p>
+        </header>
+        <section class="modal-card-body">
+          <div v-for="l in list" v-bind:key="l.sid">
+            <p>{{ l.sid }}</p>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <form action="/" method="get">
+            <button class="button is-success">Save changes</button>
+          </form>
+          <button class="button" v-on:click="hideModal">Cancel</button>
+        </footer>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" v-on:click="hideModal"></button>
+  </div>
+</div>
+<script src="@routes.Assets.versioned("javascripts/index.js")"></script>
 }

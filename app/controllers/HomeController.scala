@@ -10,4 +10,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     println(request.session.get("session_id"))
     Ok(views.html.index())
   }
+
+  def json = Action { implicit request: Request[AnyContent] =>
+    Ok("{\"originalValue\": 100}").as("application/json")
+  }
 }
