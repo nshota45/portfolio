@@ -38,9 +38,12 @@ class HomeController @Inject()(
 
   def postForm = Action { implicit request: Request[AnyContent] =>
     formData.bindFromRequest.fold(
-      _ => Redirect("/form"),
+      e => {
+        Redirect("/form").flashing("errMsg" -> e.errors.mkString(","))
+      },
       f => {
         f.forms.foreach { r =>
+          println(r)
           dao.updateValueById(id = r.id, value = r.after)
         }
         Redirect("/form").flashing("infoMsg" -> "登録に成功しました")

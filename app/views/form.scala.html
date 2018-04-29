@@ -7,49 +7,45 @@
       @request.flash.get("infoMsg"))
     </div>
   }
+  @if(request.flash.get("errMsg")) {
+  <div class="notification is-danger">
+    @request.flash.get("errMsg"))
+  </div>
+  }
+
+  <small style="color:white">変更対象のidを入力してください</small>
+  <input type="number" class="input is-success" v-model="inputId">
+  <button class="button is-success" style="margin-top:5px;" v-on:click="addForm(inputId)">追加</button>
+
   @helper.form(action = helper.CSRF(routes.HomeController.postForm())) {
-    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style="margin-top:50px;">
       <thead>
       <tr>
         <th>id</th>
         <th>before</th>
         <th>after</th>
         <th></th>
-        <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
+      <tr v-for="(index, f) in forms" v-bind:key="index">
         <td>
-          <input type="number" class="input is-success" name="forms[1].id" value="12">
+          {{ f.id }}
+          <input type="hidden" :name="'forms[' + index + '].id'" :value="f.id">
         </td>
         <td>
-          100
+          {{ f.before }}
         </td>
         <td>
-          <input type="text" class="input is-success" name="forms[1].after" value="12">
+          <input type="number" class="input is-success" :name="'forms[' + index + '].after'" :value="f.after" v-model="f.after">
         </td>
         <td>
-          <button class="button is-danger" type="button">削除</button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="number" class="input is-success" name="forms[2].id" value="12">
-        </td>
-        <td>
-          100
-        </td>
-        <td>
-          <input type="text" class="input is-success" name="forms[2].after" value="12">
-        </td>
-        <td>
-          <button class="button is-danger" type="button">削除</button>
+          <button class="button is-danger" type="button" v-on:click="remove(f.id)">削除</button>
         </td>
       </tr>
       </tbody>
     </table>
-    <button class="button is-success">送信</button>
+    <button class="button is-success" :disabled="isConfirmButtonDisabled">確認</button>
   }
 </div>
 <script src="@routes.Assets.versioned("javascripts/form.js")"></script>
