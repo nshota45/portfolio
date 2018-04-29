@@ -1,0 +1,56 @@
+@()(implicit request: Request[AnyContent] )
+
+@main("form") {
+<div id="form" style="margin-top:50px;">
+  @if(request.flash.get("infoMsg")) {
+    <div class="notification is-success">
+      @request.flash.get("infoMsg"))
+    </div>
+  }
+  @helper.form(action = helper.CSRF(routes.HomeController.postForm())) {
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>before</th>
+        <th>after</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input type="number" class="input is-success" name="forms[1].id" value="12">
+        </td>
+        <td>
+          100
+        </td>
+        <td>
+          <input type="text" class="input is-success" name="forms[1].after" value="12">
+        </td>
+        <td>
+          <button class="button is-danger" type="button">削除</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="number" class="input is-success" name="forms[2].id" value="12">
+        </td>
+        <td>
+          100
+        </td>
+        <td>
+          <input type="text" class="input is-success" name="forms[2].after" value="12">
+        </td>
+        <td>
+          <button class="button is-danger" type="button">削除</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <button class="button is-success">送信</button>
+  }
+</div>
+<script src="@routes.Assets.versioned("javascripts/form.js")"></script>
+}
