@@ -3,12 +3,14 @@
 @main("form") {
 <div id="form" style="margin-top:50px;">
   @if(request.flash.get("infoMsg")) {
-    <div class="notification is-success">
+    <div class="notification is-success" v-if="showAlertMsg">
+      <button class="delete" v-on:click="deleteAlertMsg"></button>
       @request.flash.get("infoMsg")
     </div>
   }
   @if(request.flash.get("errMsg")) {
-  <div class="notification is-danger">
+  <div class="notification is-danger" v-if="showAlertMsg">
+    <button class="delete" v-on:click="deleteAlertMsg"></button>
     @request.flash.get("errMsg")
   </div>
   }

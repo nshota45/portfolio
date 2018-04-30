@@ -5,6 +5,7 @@ new Vue({
     forms: [
       //{'id': undefined, 'before': undefined, after: undefined}
     ],
+    showAlertMsg: true
   },
   methods: {
     addForm: function (id) {
@@ -24,6 +25,9 @@ new Vue({
     },
     remove: function (id) {
       this.forms = this.forms.filter(f => f.id != id)
+    },
+    deleteAlertMsg: function () {
+      this.showAlertMsg = false
     }
   },
   computed: {
